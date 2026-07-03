@@ -65,7 +65,7 @@ class CreditsState extends MusicBeatState
 			["kawaisprite",			"kawaisprite",		"Composer of Friday Night Funkin'",							"https://x.com/kawaisprite",		"378FC7"],
 			[""],
 			["just Engine"],
-			["JustMe10n",			"missing_icon",		"    Creator of Just Engine    ",							"https://www.youtube.com/@JustMe1onch",		"378FC7"],
+			["JustMe10n",			"justme10n",		"Creator of Just Engine",							"https://www.youtube.com/@JustMe1onch",		"378FC7"],
 			[""],
 			["Psych Engine Discord"],
 			["Join the Psych Ward!", "discord", "", "https://discord.gg/2ka77eMXDv", "5165F6"]

@@ -85,6 +85,12 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 			BOOL);
 		addOption(option);
 		
+		var option:Option = new Option('Flashing Lights',
+			"Check This if you're Want Icon On The Side!",
+			'timeBarIcons',
+			BOOL);
+		addOption(option);
+		
 		var option:Option = new Option('Time Bar:',
 			"What should the Time Bar display?",
 			'timeBarType',

@@ -19,7 +19,7 @@ import haxe.Json;
 
 class FreeplayState extends MusicBeatState
 {
-	var songHeading:FlxText; // Menyiapkan objek teks judul lagu
+	var songHeading:FlxText; // song name object
 	var songs:Array<SongMetadata> = [];
 
 	var selector:FlxText;
@@ -299,7 +299,7 @@ class FreeplayState extends MusicBeatState
 					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 
 					if(holdTime > 0.5 && checkNewHold - checkLastHold > 0)
-						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
+						changeSelection((checkNewHold - checkLastHold) * (controls.UI_LEFT ? -shiftMult : shiftMult));
 				}
 
 				if(FlxG.mouse.wheel != 0)
