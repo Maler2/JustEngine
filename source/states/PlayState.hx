@@ -76,7 +76,6 @@ class PlayState extends MusicBeatState
 	public static var STRUM_X = 42;
 	public static var STRUM_X_MIDDLESCROLL = -278;
 
-
 	public static var ratingStuff:Array<Dynamic> = [
 		['You Suck!', 0.2], //From 0% to 19%
 		['Shit', 0.4], //From 20% to 39%
@@ -209,6 +208,11 @@ class PlayState extends MusicBeatState
 	public var camGame:FlxCamera;
 	public var camOther:FlxCamera;
 	public var cameraSpeed:Float = 1;
+
+	public var opponentUnderlay:FlxSprite;
+	public var playerUnderlay:FlxSprite;
+	public var myHudIcon:FlxSprite;
+
 
 	public var songScore:Int = 0;
 	public var songHits:Int = 0;
@@ -1566,6 +1570,40 @@ class PlayState extends MusicBeatState
 			strumLineNotes.add(babyArrow);
 			babyArrow.playerPosition();
 		}
+
+		// underlay thingy
+		if (ClientPrefs.data.underlayOpacity > 0)
+		{
+			// Menentukan grup panah aktif berdasarkan target player (Musuh atau Player)
+			var currentGroup = (player == 1 ? playerStrums : opponentStrums);
+			
+			if (currentGroup != null && currentGroup.members.length > 0)
+			{
+				var firstArrow = currentGroup.members[0];
+				var lastArrow = currentGroup.members[currentGroup.members.length - 1];
+				
+				if (firstArrow != null && lastArrow != null)
+				{
+					// lock y position
+					var underlayBG:FlxSprite = new FlxSprite(firstArrow.x - 10, 0); 
+					
+					// do the math
+					var bgWidth:Int = Std.int((lastArrow.x + firstArrow.width) - firstArrow.x + 20);
+					
+					// make the black thing stretch to up and bottom
+					underlayBG.makeGraphic(bgWidth, FlxG.height, FlxColor.BLACK); 
+					
+					underlayBG.scrollFactor.set(0, 0);
+					underlayBG.cameras = [camHUD];
+					underlayBG.alpha = ClientPrefs.data.underlayOpacity / 100; // opacity
+					
+					// layer
+					var layerIndex:Int = members.indexOf(strumLineNotes);
+					if (layerIndex < 0) layerIndex = 0; // failsafe
+					insert(layerIndex, underlayBG);
+				}
+			}
+		}
 	}
 
 	override function openSubState(SubState:FlxSubState)
@@ -1885,8 +1923,23 @@ class PlayState extends MusicBeatState
 	public dynamic function updateIconsPosition()
 	{
 		var iconOffset:Int = 26;
-		iconP1.x = healthBar.barCenter + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
-		iconP2.x = healthBar.barCenter - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
+		// iconP1.x = healthBar.barCenter + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
+		// iconP2.x = healthBar.barCenter - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
+		if (healthBar != null && iconP1 != null && iconP2 != null) 
+		{
+			if (ClientPrefs.data.iconSide) 
+			{
+				// if on
+				iconP1.x = healthBar.x + healthBar.width - 40; 
+				iconP2.x = healthBar.x - iconP2.width + 40;   
+			} 
+			else 
+			{
+				// if off
+				iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - 26;
+				iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - 26);
+			}
+		}
 	}
 
 	var iconsAnimations:Bool = true;
@@ -2975,6 +3028,12 @@ class PlayState extends MusicBeatState
 
 	function opponentNoteHit(note:Note):Void
 	{
+		if (vocals != null)
+		{
+			vocals.volume = 1;
+			if (!vocals.playing) vocals.play();
+		} 
+
 		var result:Dynamic = callOnLuas('opponentNoteHitPre', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
 		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) result = callOnHScript('opponentNoteHitPre', [note]);
 

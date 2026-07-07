@@ -1674,40 +1674,53 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 	function onSelectNote()
 	{
-		if(selectedNotes.length == 1) //Only one note selected
+		// i was something?
+		try 
 		{
-			var note:MetaNote = selectedNotes[0];
-			strumTimeStepper.value = note.strumTime;
-			if(!note.isEvent) //Normal note
+			if(selectedNotes.length == 1) //Only one note selected
 			{
-				if(!note.isEvent)
+				var note:MetaNote = selectedNotes[0];
+				
+				// maybe im a placeholder?
+				// strumTimeStepper.value = note.strumTime;
+				
+				if(!note.isEvent) //Normal note
 				{
-					susLengthLastVal = susLengthStepper.value = note.sustainLength;
-					noteTypeDropDown.selectedIndex = Std.int(Math.max(0, noteTypes.indexOf(note.noteType)));
+					if(!note.isEvent)
+					{
+						// are we not REAL??
+						// ARE WE NOT REAL???
+						
+						noteTypeDropDown.selectedIndex = Std.int(Math.max(0, noteTypes.indexOf(note.noteType)));
+					}
+					else
+					{
+						// susLengthLastVal = susLengthStepper.value = 0;
+						noteTypeDropDown.selectedLabel = '';
+					}
 				}
-				else
+				else //Event note
 				{
-					susLengthLastVal = susLengthStepper.value = 0;
-					noteTypeDropDown.selectedLabel = '';
+					var eventNote:EventMetaNote = cast (selectedNotes, EventMetaNote);
+					updateSelectedEventText();
 				}
 			}
-			else //Event note
+			else if(selectedNotes.length > 1)
 			{
-				var eventNote:EventMetaNote = cast (selectedNotes[0], EventMetaNote);
-				updateSelectedEventText();
+				// susLengthStepper.min = -susLengthStepper.max;
+				// susLengthLastVal = susLengthStepper.value = 0;
+				// strumTimeStepper.value = selectedNotes.strumTime;
+				noteTypeDropDown.selectedLabel = '';
+				eventDropDown.selectedLabel = '';
+				value1InputText.text = '';
+				value2InputText.text = '';
 			}
-		}
-		else if(selectedNotes.length > 1)
+			forceDataUpdate = true;
+		} 
+		catch(e:Dynamic) 
 		{
-			susLengthStepper.min = -susLengthStepper.max;
-			susLengthLastVal = susLengthStepper.value = 0;
-			strumTimeStepper.value = selectedNotes[0].strumTime;
-			noteTypeDropDown.selectedLabel = '';
-			eventDropDown.selectedLabel = '';
-			value1InputText.text = '';
-			value2InputText.text = '';
+			forceDataUpdate = true;
 		}
-		forceDataUpdate = true;
 	}
 
 	function updateSelectedEventText()

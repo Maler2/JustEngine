@@ -49,27 +49,35 @@ class PsychUINumericStepper extends PsychUIInputText
 	{
 		super.update(elapsed);
 
-		if(FlxG.mouse.justPressed)
+		// idk why i was here
+		try 
 		{
-			if(buttonPlus != null && buttonPlus.exists && FlxG.mouse.overlaps(buttonPlus, camera))
+			if(FlxG.mouse.justPressed)
 			{
-				buttonPlus.animation.play('pressed');
-				value += step;
-				_internalOnChange();
+				if(buttonPlus != null && buttonPlus.exists && FlxG.mouse.overlaps(buttonPlus, camera))
+				{
+					buttonPlus.animation.play('pressed');
+					value += step;
+					_internalOnChange(); // same dude
+				}
+				else if(buttonMinus != null && buttonMinus.exists && FlxG.mouse.overlaps(buttonMinus, camera))
+				{
+					buttonMinus.animation.play('pressed');
+					value -= step;
+					_internalOnChange(); // yeah
+				}
 			}
-			else if(buttonMinus != null && buttonMinus.exists && FlxG.mouse.overlaps(buttonMinus, camera))
+			else if(FlxG.mouse.released)
 			{
-				buttonMinus.animation.play('pressed');
-				value -= step;
-				_internalOnChange();
+				if(buttonPlus != null && buttonPlus.exists && buttonPlus.animation.curAnim != null && buttonPlus.animation.curAnim.name != 'normal')
+					buttonPlus.animation.play('normal');
+				if(buttonMinus != null && buttonMinus.exists && buttonMinus.animation.curAnim != null && buttonMinus.animation.curAnim.name != 'normal')
+					buttonMinus.animation.play('normal');
 			}
-		}
-		else if(FlxG.mouse.released)
+		} 
+		catch(e:Dynamic) 
 		{
-			if(buttonPlus != null && buttonPlus.exists && buttonPlus.animation.curAnim != null && buttonPlus.animation.curAnim.name != 'normal')
-				buttonPlus.animation.play('normal');
-			if(buttonMinus != null && buttonMinus.exists && buttonMinus.animation.curAnim != null && buttonMinus.animation.curAnim.name != 'normal')
-				buttonMinus.animation.play('normal');
+			// yep
 		}
 	}
 

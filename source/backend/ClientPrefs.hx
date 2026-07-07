@@ -10,7 +10,6 @@ import states.TitleState;
 @:structInit class SaveVariables {
 	public var downScroll:Bool = false;
 	public var middleScroll:Bool = false;
-	public var timeBarIcons:Bool = false; // Icon 
 	public var opponentStrums:Bool = true;
 	public var showFPS:Bool = true;
 	public var flashing:Bool = true;
@@ -78,6 +77,12 @@ import states.TitleState;
 	public var discordRPC:Bool = true;
 	public var loadingScreen:Bool = true;
 	public var language:String = 'en-US';
+
+	// new options
+	public var iconSide:Bool = false;
+	public var underlayOpacity:Int = 60; //  60% by default 
+	public var dynamicUnderlay:Bool = true; // true by default
+
 }
 
 class ClientPrefs {
